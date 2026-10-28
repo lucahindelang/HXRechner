@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>h,x-Rechner</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace">
+        <aside class="panel controls-panel" aria-label="Eingabe">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Thermodynamik</p>
+              <h1>h,x-Rechner</h1>
+            </div>
+            <button id="loadExampleBtn" class="icon-button" type="button" title="Beispiel laden" aria-label="Beispiel laden">
+              <span aria-hidden="true">&#8634;</span>
+            </button>
+          </div>
+
+          <div class="section-box">
+            <div class="section-title">
+              <h2>Referenzdruck</h2>
+              <button id="normPressureBtn" type="button" class="secondary">Normdruck</button>
+            </div>
+            <div class="compact-grid">
+              <label>
+                Vorgabe
+                <select id="pressureMode">
+                  <option value="hPa">Druck [hPa]</option>
+                  <option value="Pa">Druck [Pa]</option>
+                  <option value="kPa">Druck [kPa]</option>
+                  <option value="bar">Druck [bar]</option>
+                  <option value="alt">Meereshoehe [m]</option>
+                </select>
+              </label>
+              <label>
+                <span id="pressureLabel">Druck [hPa]</span>
+                <input id="pressureValue" type="number" step="any" />
+              </label>
+              <p id="pressureHint" class="hint full-width"></p>
+            </div>
+          </div>
+
+          <div class="section-box">
+            <div class="section-title">
+              <h2>Zustandsgroessen</h2>
+            </div>
+            <div class="compact-grid">
+              <label>
+                Groesse 1
+                <select id="key1"></select>
+              </label>
+              <label>
+                <span id="label1">Wert</span>
+                <input id="value1" type="number" step="any" />
+              </label>
+              <label>
+                Groesse 2
+                <select id="key2"></select>
+              </label>
+              <label>
+                <span id="label2">Wert</span>
+                <input id="value2" type="number" step="any" />
+              </label>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <div class="table-title">
+              <h2>Zustaende</h2>
+              <div class="button-row">
+                <button id="addStateBtn" type="button">+ Zustand</button>
+                <button id="removeStateBtn" class="secondary" type="button">- Zustand</button>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>t [&deg;C]</th>
+                    <th>&phi; [%]</th>
+                    <th>x [g/kg]</th>
+                    <th>h [kJ/kg]</th>
+                    <th>&Delta;h</th>
+                    <th>&Delta;x</th>
+                  </tr>
+                </thead>
+                <tbody id="stateTable"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <p class="formula-title">Formeln</p>
+            <pre>x   = 0.622 * p_D / (p - p_D)
+&phi;   = p_D / p_s(t)
+h   = 1.006 * t + x * (2501 + 1.86 * t)
+&rho;   = (1 + x) / v
+v   = (R_L + x * R_D) * T / p
+p_s : Sonntag (1990), unter 0 &deg;C ueber Eis</pre>
+          </div>
+
+          <div class="toolbar">
+            <button id="calculateBtn" type="button">Berechnen</button>
+            <button id="resetBtn" type="button" class="secondary">Zuruecksetzen</button>
+          </div>
+        </aside>
+
+        <section class="panel output-panel" aria-label="Ausgabe">
+          <div class="panel-header compact">
+            <div>
+              <p class="eyebrow">Ergebnis</p>
+              <h2>Zustand feuchter Luft</h2>
+            </div>
+            <button id="copyBtn" type="button" class="secondary">Kopieren</button>
+          </div>
+
+          <div id="resultGrid" class="result-grid"></div>
+
+          <div class="status-wrap">
+            <p id="status" class="status" role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="chart-wrap">
+            <h3>h,x-Diagramm nach Mollier</h3>
+            <p id="cursorInfo" class="table-info cursor-info">Klick ins Diagramm uebernimmt den Punkt (t, x) als Eingabe.</p>
+            <canvas id="diagramCanvas" class="diagram-canvas" width="1200" height="760" aria-label="h,x-Diagramm mit aktuellem Zustand"></canvas>
+          </div>
+
+          <div class="report-wrap">
+            <h3>Textausgabe</h3>
+            <pre id="reportOutput" class="report-output"></pre>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
